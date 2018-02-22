@@ -219,13 +219,13 @@ public class BooksGUI extends javax.swing.JFrame {
         
         Object sopo = parser.readObject(sop.TABLE_PATH);
         
-        sop = (SetOfBooks) sopo;
+        final SetOfBooks soped = (SetOfBooks) sopo;
         
         books_table.setModel(tableModel);
     
         books_table.setCellSelectionEnabled(false);
         
-        for (Book book : sop.getBooks())
+        for (Book book : soped.getBooks())
         {
             Object row[] = {
                 book.getISBNNumber(),
@@ -243,7 +243,18 @@ public class BooksGUI extends javax.swing.JFrame {
         books_table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println(books_table.getValueAt(books_table.getSelectedRow(), 1).toString());
+                
+                String ISBN = books_table
+                        .getValueAt(books_table.getSelectedRow(), 0)
+                        .toString();
+                
+                SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
+                
+                for (Book book : setOfBooks.getBooks())
+                {                                       
+                    (new UpdateBook(book)).setVisible(true);                    
+                }
+                
             }
         });
         

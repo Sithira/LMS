@@ -41,7 +41,8 @@ public class SetOfBooks implements Serializable
             {
                 if (book instanceof Book)
                 {
-                    if (book.getAuthor().equals(name))
+                    if (book.getAuthor() != null 
+                            && book.getAuthor().equals(name))
                     {
                        sob.addBook(book);
                     }
@@ -66,7 +67,8 @@ public class SetOfBooks implements Serializable
             {
                 if (book instanceof Book)
                 {
-                    if (book.getTitle().equals(title))
+                    if (book.getTitle() != null 
+                            && book.getTitle().equals(title))
                     {
                         sob.addBook(book);
                     }
@@ -90,7 +92,8 @@ public class SetOfBooks implements Serializable
             {
                 if (book instanceof Book)
                 {
-                    if (book.getAccessionNumber() == number)
+                    if (book.getAccessionNumber() != -1 
+                            && book.getAccessionNumber() == number)
                     {
                         return book;
                     }
@@ -118,7 +121,8 @@ public class SetOfBooks implements Serializable
                 if (book instanceof Book)
                 {
                     
-                    if (book.getISBNNumber().equals(isbn))
+                    if (book.getISBNNumber() != null 
+                            && book.getISBNNumber().equals(isbn))
                     {
                         sob.addBook(book);                     
                     }

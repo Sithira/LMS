@@ -27,6 +27,13 @@ public class Book implements Serializable
         title = titl;
     }
     
+    public Book(String isbn, String titl)
+    {
+        ISBNNumber = isbn;
+        
+        title = titl;
+    }
+    
     public Book(String isbn, String titl, String authr)
     {
         ISBNNumber = isbn;
@@ -85,22 +92,12 @@ public class Book implements Serializable
                         }
                     }
                 }
-                else
-                {
-                    System.out.println("LEL");
-                }
                 
             }
-            else
-            {
-                System.out.println("SOB NULL");
-            }
-              
-            System.out.println("INNER FALSE");
+ 
             return false;
         }
-    
-        System.out.println("OUTER FALSE");
+        
         return false;
         
     }
