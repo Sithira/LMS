@@ -17,7 +17,7 @@ public class Book implements Serializable
         
     private String ISBNNumber, title, author;
 
-    private int accessionNumber;
+    private int accessionNumber = -999;
     
     private Member borrower;
     

@@ -29,9 +29,8 @@ public class BooksGUI extends javax.swing.JFrame {
      * Creates new form BooksGUI
      */
     public BooksGUI() {
-        initComponents();
         
-        init();
+        initComponents();
         
         try {
             loadDataToTable();
@@ -198,20 +197,12 @@ public class BooksGUI extends javax.swing.JFrame {
         });
     }
     
-    
-    private void init()
-    {
-        
-
-        
-    }
-    
     private void loadDataToTable() throws IOException,
             FileNotFoundException,
             ClassNotFoundException
     {
         
-        String columnNames[] = {"ISBN", "Title", "Auther", "accessionNumber", "Member", "onLoan ?"};
+        String columnNames[] = {"ISBN", "Title", "Auther", "accessionNumber", "Member Name", "onLoan ?"};
         
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         
@@ -227,12 +218,20 @@ public class BooksGUI extends javax.swing.JFrame {
         
         for (Book book : soped.getBooks())
         {
+            
+            String member_name = "N/A";
+            
+            if (book.getBorrower() != null)
+            {
+                member_name = book.getBorrower().getName();
+            }
+            
             Object row[] = {
                 book.getISBNNumber(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getAccessionNumber(),
-                null,
+                book.getAccessionNumber() == -999 ? "N/A" : book.getAccessionNumber(),
+                member_name,
                 book.isOnLoan() ? "YES" : "NO"
             };
             
@@ -250,9 +249,18 @@ public class BooksGUI extends javax.swing.JFrame {
                 
                 SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
                 
+                boolean opened = false;
+                
                 for (Book book : setOfBooks.getBooks())
                 {                                       
-                    (new UpdateBook(book)).setVisible(true);                    
+                    (new UpdateBookGUI(book)).setVisible(true);
+
+                    opened = true;
+                }
+                
+                if (opened)
+                {
+                    dispose();
                 }
                 
             }

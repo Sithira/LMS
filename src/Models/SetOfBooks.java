@@ -17,7 +17,7 @@ import java.util.Iterator;
 public class SetOfBooks implements Serializable
 { 
     
-    public final String TABLE_PATH = Paths.get(".")
+    public static final String TABLE_PATH = Paths.get(".")
             .toAbsolutePath()
             .normalize()
             .toString() + "/database/SetOfBooks.srlz";
@@ -141,25 +141,39 @@ public class SetOfBooks implements Serializable
     public void removeBook(Book book)
     {
         
+        System.out.println("FORE ");
+        
         if (!books.isEmpty())
         {
             
-             for(Book bk : books)
-             {
-                 
-                if (bk instanceof Book)
+            for (int x = 0; x < books.size(); x++)
+            {
+                
+                String title = null;
+                
+                int accessionNumber = 0;       
+                
+                Book bk = books.get(x);
+                
+                if (bk.getTitle() != null)
                 {
-                    if (bk.equals(book))
-                    {
-                        books.remove(book);
-                    }
+                    title = bk.getTitle();
                 }
-                 
-             }
+                
+                if (bk.getAccessionNumber() != -999)
+                {
+                    accessionNumber = bk.getAccessionNumber();
+                }
+                
+                if (title != null && accessionNumber != -999)
+                {
+                    books.remove(x);
+                }
+                
+            }
            
         }
         
-        books.remove(book);
     }
     
     public ArrayList<Book> getBooks()
