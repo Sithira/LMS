@@ -5,3 +5,4 @@ dist/
 nbdist/
 database/
 .nb-gradle/
+.DS_Store

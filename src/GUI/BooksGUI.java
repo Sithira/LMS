@@ -5,17 +5,41 @@
  */
 package GUI;
 
+import Core.ObjectParser;
+import Models.Book;
+import Models.SetOfBooks;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author sithira
  */
 public class BooksGUI extends javax.swing.JFrame {
 
+    private ObjectParser parser = ObjectParser.getInstance();
+    
     /**
      * Creates new form BooksGUI
      */
     public BooksGUI() {
         initComponents();
+        
+        init();
+        
+        try {
+            loadDataToTable();
+        } catch (IOException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -172,6 +196,57 @@ public class BooksGUI extends javax.swing.JFrame {
                 new BooksGUI().setVisible(true);
             }
         });
+    }
+    
+    
+    private void init()
+    {
+        
+
+        
+    }
+    
+    private void loadDataToTable() throws IOException,
+            FileNotFoundException,
+            ClassNotFoundException
+    {
+        
+        String columnNames[] = {"ISBN", "Title", "Auther", "accessionNumber", "Member", "onLoan ?"};
+        
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        
+        SetOfBooks sop = new SetOfBooks();
+        
+        Object sopo = parser.readObject(sop.TABLE_PATH);
+        
+        sop = (SetOfBooks) sopo;
+        
+        books_table.setModel(tableModel);
+    
+        books_table.setCellSelectionEnabled(false);
+        
+        for (Book book : sop.getBooks())
+        {
+            Object row[] = {
+                book.getISBNNumber(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getAccessionNumber(),
+                null,
+                book.isOnLoan() ? "YES" : "NO"
+            };
+            
+            tableModel.addRow(row);
+        }
+        
+
+        books_table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                System.out.println(books_table.getValueAt(books_table.getSelectedRow(), 1).toString());
+            }
+        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

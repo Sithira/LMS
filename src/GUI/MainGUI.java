@@ -16,6 +16,8 @@ public class MainGUI extends javax.swing.JFrame {
      */
     public MainGUI() {
         initComponents();
+        
+        
     }
 
     /**
@@ -36,6 +38,11 @@ public class MainGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btn_all_books.setText("All Books");
+        btn_all_books.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_all_booksActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("All Members");
 
@@ -90,6 +97,12 @@ public class MainGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_all_booksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_all_booksActionPerformed
+        
+        (new BooksGUI()).setVisible(true);
+        
+    }//GEN-LAST:event_btn_all_booksActionPerformed
 
     /**
      * @param args the command line arguments
