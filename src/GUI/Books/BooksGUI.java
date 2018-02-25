@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI;
+package GUI.Books;
 
 import Core.ObjectParser;
 import Models.Book;
@@ -12,9 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -238,34 +235,37 @@ public class BooksGUI extends javax.swing.JFrame {
             tableModel.addRow(row);
         }
         
+        books_table.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    int row = books_table.rowAtPoint(evt.getPoint());
+                    int col = books_table.columnAtPoint(evt.getPoint());
+                    if (row >= 0 && col >= 0) {
+                        
+                        String ISBN = books_table
+                                .getValueAt(row, 0)
+                                .toString();
+                        
+                        SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
 
-        books_table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                
-                String ISBN = books_table
-                        .getValueAt(books_table.getSelectedRow(), 0)
-                        .toString();
-                
-                SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
-                
-                boolean opened = false;
-                
-                for (Book book : setOfBooks.getBooks())
-                {                                       
-                    (new UpdateBookGUI(book)).setVisible(true);
+                        boolean opened = false;
 
-                    opened = true;
+                        for (Book book : setOfBooks.getBooks())
+                        {                                       
+                            (new UpdateBookGUI(book)).setVisible(true);
+
+                            opened = true;
+                        }
+
+                        if (opened)
+                        {
+                            dispose();
+                        }
+
+                    }
                 }
-                
-                if (opened)
-                {
-                    dispose();
-                }
-                
-            }
-        });
-        
+            });
+              
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

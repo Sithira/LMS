@@ -8,7 +8,6 @@ package Models;
 import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  *
@@ -140,9 +139,7 @@ public class SetOfBooks implements Serializable
     
     public void removeBook(Book book)
     {
-        
-        System.out.println("FORE ");
-        
+        // Todo: improve the conditions
         if (!books.isEmpty())
         {
             
@@ -163,11 +160,15 @@ public class SetOfBooks implements Serializable
                 if (bk.getAccessionNumber() != -999)
                 {
                     accessionNumber = bk.getAccessionNumber();
-                }
+                }               
                 
                 if (title != null && accessionNumber != -999)
                 {
-                    books.remove(x);
+                    if (title.equals(book.getTitle()))
+                    {
+                        books.remove(x);
+                    }
+                                       
                 }
                 
             }
