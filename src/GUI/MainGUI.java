@@ -6,6 +6,7 @@
 package GUI;
 
 import GUI.Books.BooksGUI;
+import GUI.Members.MembersGUI;
 
 /**
  *
@@ -47,6 +48,11 @@ public class MainGUI extends javax.swing.JFrame {
         });
 
         jButton1.setText("All Members");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         system_name.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 36)); // NOI18N
         system_name.setText("THE LMS");
@@ -105,6 +111,12 @@ public class MainGUI extends javax.swing.JFrame {
         (new BooksGUI()).setVisible(true);
         
     }//GEN-LAST:event_btn_all_booksActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        (new MembersGUI()).setVisible(true);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

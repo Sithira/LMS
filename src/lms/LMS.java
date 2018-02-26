@@ -56,7 +56,8 @@ public class LMS {
         sob.addBook(book2);
         sob.addBook(book3);
         
-        book1.setBorrower(member1);        
+        book1.setBorrower(member1);   
+        book2.setBorrower(member1);
         
         member1.setCurrentLoans(sob);
         

@@ -5,17 +5,38 @@
  */
 package GUI.Members;
 
+import Core.ObjectParser;
+import Models.Member;
+import Models.SetOfBooks;
+import Models.SetOfMembers;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author sithira
  */
 public class MembersGUI extends javax.swing.JFrame {
 
+    private ObjectParser parser = ObjectParser.getInstance();
+               
     /**
      * Creates new form MembersGUI
      */
     public MembersGUI() {
         initComponents();
+        
+        try {
+            loadDataToTable();
+        } catch (IOException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -27,18 +48,104 @@ public class MembersGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        label_member_frame = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        member_table = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        member_id = new javax.swing.JTextField();
+        member_name_label = new javax.swing.JTextField();
+        search_button = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(640, 400));
+
+        label_member_frame.setFont(new java.awt.Font("Monaco", 0, 24)); // NOI18N
+        label_member_frame.setText("LMS Members");
+
+        member_table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(member_table);
+
+        jLabel1.setText("Member ID : ");
+
+        jLabel2.setText("Member Name : ");
+
+        search_button.setText("Search");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(230, 230, 230)
+                                .addComponent(label_member_frame))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(89, 89, 89)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(29, 29, 29)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(member_name_label, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                                    .addComponent(member_id))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label_member_frame)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(member_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(member_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(search_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 640, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -78,7 +185,115 @@ public class MembersGUI extends javax.swing.JFrame {
             }
         });
     }
+    
+        private void loadDataToTable() throws IOException,
+            FileNotFoundException,
+            ClassNotFoundException
+    {
+        
+        String columnNames[] = {"Member ID", "Member Name", "Set of Books"};
+        
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        
+        SetOfMembers som = new SetOfMembers();
+        
+        Object somo = parser.readObject(som.TABLE_PATH);
+        
+        final SetOfMembers soped = (SetOfMembers) somo;
+        
+        member_table.setModel(tableModel);
+    
+        member_table.setCellSelectionEnabled(false);
+        
+        for (Member member : soped.getMembers())
+        {
+            
+            String member_name = "N/A";
+            
+            if (member.getName() != null)
+            {
+                member_name = member.getName();
+            }
+            
+            final SetOfBooks books;
+            
+            StringBuilder booknames = new StringBuilder();
+            
+            if(member.getBooksOnLoan() != null)
+            {
+                books = member.getBooksOnLoan();
+                
+                if (books.getBooks() != null && books.getBooks().size() > 0)
+                {
+                    
+                    int bookSize = books.getBooks().size();
+                    
+                    for(int x = 0; x < bookSize; x++)
+                    {
+                        
+                        booknames.append(books.getBooks().get(x).getTitle());
+                        
+                        if (x + 1 != bookSize)
+                        {
+                            booknames.append(", ");
+                        }
+                    }
+                    
+                }
+                
+            }
+            
+            Object row[] = {
+                member_name,
+                member.getName(),
+                booknames.toString()
+            };
+            
+            tableModel.addRow(row);
+        }
+        
+        member_table.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    int row = member_table.rowAtPoint(evt.getPoint());
+                    int col = member_table.columnAtPoint(evt.getPoint());
+                    if (row >= 0 && col >= 0) {
+                        
+                        String member_name = member_table
+                                .getValueAt(row, 0)
+                                .toString();
+                        
+                        Member member = soped.getMemberFromName(member_name);
+
+                        boolean opened = false;
+
+//                        for (Book book : setOfMembers.getBooks())
+//                        {                                       
+//                            (new UpdateBookGUI(book)).setVisible(true);
+//
+//                            opened = true;
+//                        }
+
+                        if (opened)
+                        {
+                            dispose();
+                        }
+
+                    }
+                }
+            });
+              
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel label_member_frame;
+    private javax.swing.JTextField member_id;
+    private javax.swing.JTextField member_name_label;
+    private javax.swing.JTable member_table;
+    private javax.swing.JButton search_button;
     // End of variables declaration//GEN-END:variables
 }
