@@ -11,16 +11,16 @@ import Models.Member;
  *
  * @author sithira
  */
-public class UpdateMember extends javax.swing.JFrame {
+public class UpdateMemberGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form UpdateMember
      */
-    public UpdateMember() {
+    public UpdateMemberGUI() {
         initComponents();
     }
 
-    public UpdateMember(Member member)
+    public UpdateMemberGUI(Member member)
     {
         
     }
@@ -95,20 +95,21 @@ public class UpdateMember extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UpdateMember.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateMemberGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UpdateMember.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateMemberGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UpdateMember.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateMemberGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateMember.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateMemberGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UpdateMember().setVisible(true);
+                new UpdateMemberGUI().setVisible(true);
             }
         });
     }

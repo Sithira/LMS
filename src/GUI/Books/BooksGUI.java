@@ -252,7 +252,7 @@ public class BooksGUI extends javax.swing.JFrame {
 
                         for (Book book : setOfBooks.getBooks())
                         {                                       
-                            (new UpdateBookGUI(book)).setVisible(true);
+                            (new UpdateBookGUI(book, soped)).setVisible(true);
 
                             opened = true;
                         }

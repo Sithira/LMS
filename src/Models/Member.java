@@ -118,9 +118,16 @@ public class Member implements Serializable
     {
         SetOfBooks sob = getCurrentLoans();
         
-        if (sob.getBooks() != null)
+        if (sob != null)
         {
-            return sob.getBooks().size();
+            if (sob.getBooks() != null)
+            {
+                return sob.getBooks().size();
+            }
+            else
+            {
+                return -1;
+            }
         }
         else
         {

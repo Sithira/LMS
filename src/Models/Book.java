@@ -74,7 +74,7 @@ public class Book implements Serializable
         {
            
             SetOfBooks sob = borrower.getCurrentLoans();
-            
+                      
             if (sob != null)
             {
                 ArrayList<Book> books = sob.getBooks();
@@ -82,7 +82,7 @@ public class Book implements Serializable
                 if (!books.isEmpty())
                 {
                     for (Book book : books)
-                    {
+                    {                        
                         if (book instanceof Book)
                         {
                             if (book.equals(this))
@@ -95,6 +95,8 @@ public class Book implements Serializable
                 
             }
  
+            System.out.println("Nikanma null wela");
+            
             return false;
         }
         

@@ -8,8 +8,11 @@ package GUI.Books;
 import Core.LMSAlert;
 import Core.ObjectParser;
 import Models.Book;
+import Models.Member;
 import Models.SetOfBooks;
+import Models.SetOfMembers;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -20,9 +23,17 @@ import javax.swing.JFrame;
  */
 public class UpdateBookGUI extends javax.swing.JFrame {
 
-    private Book book;
+    private Book book = null;
+    
+    private SetOfMembers som = new SetOfMembers();
+    
+    private SetOfBooks sob = null;
     
     private ObjectParser parser;
+    
+    private static final String RM_MEMBER = "Remove Member";
+    
+    private ArrayList<Member> member_arrays = new ArrayList<Member>();
     
     /**
      * Creates new form UpdateBook
@@ -31,15 +42,23 @@ public class UpdateBookGUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    public UpdateBookGUI(Book b)
+    public UpdateBookGUI(Book b, SetOfBooks sb)
     {
         initComponents();
         
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+       
         parser = ObjectParser.getInstance();
         
-        book = b;
+        for(Book bk : sb.getBooks())
+        {
+            if (bk.getISBNNumber().equals(b.getISBNNumber()))
+            {
+                book = bk;
+            }
+        }
+        
+        sob = sb; 
         
         book_name.setText(book.getTitle());
         
@@ -59,9 +78,48 @@ public class UpdateBookGUI extends javax.swing.JFrame {
         if (book.getBorrower() != null)
         {
             mem_name = book.getBorrower().getName();
-        }
+        }           
         
-        member_name.setText(mem_name);
+        try {
+            
+            som = (SetOfMembers) parser.readObject(som.TABLE_PATH);
+            
+            member_names.addItem(RM_MEMBER);
+            
+            if (som.getMembers() != null && som.getMembers().size() > 0)
+            {        
+                
+                Member memb = null;
+                                             
+                for (Member member : som.getMembers())
+                {
+                    
+                    if (book.getBorrower() != null)
+                    {
+                        if (member.getName().equals(book.getBorrower().getName()))
+                        {
+                              memb = member;
+                        }
+                    }                    
+                    
+                    member_arrays.add(member);
+                    member_names.addItem(member.getName());
+                    
+                }  
+                
+                if (memb != null)
+                {
+                    member_names.setSelectedItem(memb.getName());
+                }               
+                
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
     }
 
     /**
@@ -73,6 +131,7 @@ public class UpdateBookGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         book_edit_label = new javax.swing.JLabel();
         book_name_label = new javax.swing.JLabel();
@@ -84,9 +143,12 @@ public class UpdateBookGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         member_label = new javax.swing.JLabel();
-        member_name = new javax.swing.JLabel();
+        member_names = new javax.swing.JComboBox<>();
         close_button = new javax.swing.JButton();
         remove_book = new javax.swing.JButton();
+        btn_update = new javax.swing.JButton();
+
+        jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,8 +173,6 @@ public class UpdateBookGUI extends javax.swing.JFrame {
 
         member_label.setText("Borrowed Member :");
 
-        member_name.setText("Member Name");
-
         close_button.setText("Close");
         close_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,14 +187,21 @@ public class UpdateBookGUI extends javax.swing.JFrame {
             }
         });
 
+        btn_update.setText("Update");
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(book_name_label)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -143,20 +210,25 @@ public class UpdateBookGUI extends javax.swing.JFrame {
                                     .addComponent(author_label)
                                     .addComponent(jLabel1)
                                     .addComponent(member_label))
-                                .addGap(24, 24, 24)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(member_name)
-                                    .addComponent(jLabel2)
-                                    .addComponent(book_name, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(book_isbn)
-                                    .addComponent(book_author))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(24, 24, 24)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(book_name, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(book_isbn)
+                                            .addComponent(book_author)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(member_names, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(close_button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap()
+                        .addComponent(btn_update)
+                        .addGap(3, 3, 3)
                         .addComponent(remove_book)
-                        .addGap(40, 40, 40))))
+                        .addGap(18, 18, 18)
+                        .addComponent(close_button)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(98, 98, 98)
                 .addComponent(book_edit_label, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,14 +255,15 @@ public class UpdateBookGUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
-                .addGap(29, 29, 29)
+                .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(member_label)
-                    .addComponent(member_name))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                    .addComponent(member_names, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(remove_book)
                     .addComponent(close_button)
-                    .addComponent(remove_book))
+                    .addComponent(btn_update))
                 .addGap(14, 14, 14))
         );
 
@@ -200,8 +273,7 @@ public class UpdateBookGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,23 +287,27 @@ public class UpdateBookGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void close_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_buttonActionPerformed
-        // TODO add your handling code here:
+        (new BooksGUI()).setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_close_buttonActionPerformed
 
     private void remove_bookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remove_bookActionPerformed
         
-//        if (book.isOnLoan())
-//        {
-//            LMSAlert.showDialog("This book is on a loan. You Cant Delete it.");
-//        }
-//        else
-//        {
+        if (book.isOnLoan())
+        {
+            (new BooksGUI()).setVisible(true);
+            
+            LMSAlert.showDialog("This book is on a loan. You Can't Delete it.");
+        }
+        else
+        {
             try {
                 
                 SetOfBooks sop = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
                 
                 sop.removeBook(book);
-                
+                           
                 //LMSAlert.showDialog("Book has been removed from the LMS");
                 
                 parser.writeObject(sop.TABLE_PATH, sop);
@@ -247,9 +323,45 @@ public class UpdateBookGUI extends javax.swing.JFrame {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-        //}
+        }
         
     }//GEN-LAST:event_remove_bookActionPerformed
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        
+        try {
+            int i = member_names.getSelectedIndex();
+            
+            if (i == 0)
+            {
+                book.setBorrower(null);
+            }
+            else
+            {
+                Member mem = member_arrays.get((i - 1));
+                
+                if (mem.getLoanCount() < 2)
+                {
+                    book.setBorrower(mem);                    
+                                                   
+                    parser.writeObject(sob.TABLE_PATH, sob);
+
+                    LMSAlert.showDialog("Book updates successfully");
+                }
+                else
+                {                    
+                    LMSAlert.showDialog("This member has reached the maximum loan count");
+                }
+           
+            }
+            
+            (new BooksGUI()).setVisible(true);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btn_updateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -294,13 +406,15 @@ public class UpdateBookGUI extends javax.swing.JFrame {
     private javax.swing.JLabel book_isbn;
     private javax.swing.JLabel book_name;
     private javax.swing.JLabel book_name_label;
+    private javax.swing.JButton btn_update;
     private javax.swing.JButton close_button;
     private javax.swing.JLabel isbn_label;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel member_label;
-    private javax.swing.JLabel member_name;
+    private javax.swing.JComboBox<String> member_names;
     private javax.swing.JButton remove_book;
     // End of variables declaration//GEN-END:variables
 }
