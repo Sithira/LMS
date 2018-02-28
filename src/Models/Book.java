@@ -43,6 +43,17 @@ public class Book implements Serializable
         author = authr;
     }
     
+        public Book(String isbn, String titl, String authr, int acc)
+    {
+        ISBNNumber = isbn;
+        
+        title = titl;
+        
+        author = authr;
+        
+        accessionNumber = acc;
+    }
+    
     /**
      * Get the Member of the book who has borrowed it.
      * 

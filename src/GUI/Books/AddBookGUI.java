@@ -5,12 +5,22 @@
  */
 package GUI.Books;
 
+import Core.LMSAlert;
+import Core.ObjectParser;
+import Models.Book;
+import Models.SetOfBooks;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author sithira
  */
 public class AddBookGUI extends javax.swing.JFrame {
 
+    private ObjectParser parser = ObjectParser.getInstance();
+    
     /**
      * Creates new form AddBookGUI
      */
@@ -27,21 +37,147 @@ public class AddBookGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        lbl_header = new javax.swing.JLabel();
+        lbl_title = new javax.swing.JLabel();
+        lbl_author = new javax.swing.JLabel();
+        lbl_isbn = new javax.swing.JLabel();
+        lbl_accession = new javax.swing.JLabel();
+        title = new javax.swing.JTextField();
+        author = new javax.swing.JTextField();
+        isbn = new javax.swing.JTextField();
+        accession = new javax.swing.JTextField();
+        btn_add_book = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lbl_header.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_header.setText("Add Book");
+
+        lbl_title.setText("Title :");
+
+        lbl_author.setText("Author : ");
+
+        lbl_isbn.setText("ISBN :");
+
+        lbl_accession.setText("Accession : ");
+
+        btn_add_book.setText("Add Book");
+        btn_add_book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_add_bookActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(115, 115, 115)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_author)
+                        .addGap(18, 18, 18)
+                        .addComponent(author))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_isbn)
+                        .addGap(18, 18, 18)
+                        .addComponent(isbn))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_accession)
+                        .addGap(18, 18, 18)
+                        .addComponent(accession))
+                    .addComponent(btn_add_book, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_title)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_header)
+                            .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(124, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_header)
+                .addGap(43, 43, 43)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_title)
+                    .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_author)
+                    .addComponent(author, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_isbn)
+                    .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_accession)
+                    .addComponent(accession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btn_add_book)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btn_add_bookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_bookActionPerformed
+        
+        if (title.getText().isEmpty() || isbn.getText().isEmpty() 
+                || author.getText().isEmpty() || accession.getText().isEmpty())
+        {
+            LMSAlert.showDialog("Fields cannot be empty");                      
+        }
+        else
+        {
+            Book book = new Book(isbn.getText(), title.getText(), author.getText(), Integer.parseInt(accession.getText()));
+            
+            try
+            {
+                
+                SetOfBooks sob = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
+                
+                sob.addBook(book);
+                
+                parser.writeObject(SetOfBooks.TABLE_PATH, sob);               
+                
+                LMSAlert.showDialog("Book added succesfully");
+                
+                (new BooksGUI()).setVisible(true);
+                
+                dispose();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(AddBookGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddBookGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+    }//GEN-LAST:event_btn_add_bookActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +215,16 @@ public class AddBookGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField accession;
+    private javax.swing.JTextField author;
+    private javax.swing.JButton btn_add_book;
+    private javax.swing.JTextField isbn;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lbl_accession;
+    private javax.swing.JLabel lbl_author;
+    private javax.swing.JLabel lbl_header;
+    private javax.swing.JLabel lbl_isbn;
+    private javax.swing.JLabel lbl_title;
+    private javax.swing.JTextField title;
     // End of variables declaration//GEN-END:variables
 }

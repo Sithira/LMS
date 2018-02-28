@@ -312,6 +312,8 @@ public class UpdateBookGUI extends javax.swing.JFrame {
                 
                 parser.writeObject(sop.TABLE_PATH, sop);
                 
+                parser.writeObject(som.TABLE_PATH, som);
+                
                 setVisible(false);
                 
                 dispose();

@@ -58,6 +58,7 @@ public class BooksGUI extends javax.swing.JFrame {
         set_search_acc = new javax.swing.JRadioButton();
         search_button = new javax.swing.JButton();
         search_frame_heading = new javax.swing.JLabel();
+        add_book_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,41 +88,57 @@ public class BooksGUI extends javax.swing.JFrame {
         search_frame_heading.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
         search_frame_heading.setText("All Books in LMS");
 
+        add_book_btn.setText("Add Book");
+        add_book_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                add_book_btnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout main_jpanelLayout = new javax.swing.GroupLayout(main_jpanel);
         main_jpanel.setLayout(main_jpanelLayout);
         main_jpanelLayout.setHorizontalGroup(
             main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(main_jpanelLayout.createSequentialGroup()
-                .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(main_jpanelLayout.createSequentialGroup()
+                        .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(main_jpanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(author_search_label)
+                                .addGap(4, 4, 4)
+                                .addComponent(author_search))
+                            .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(main_jpanelLayout.createSequentialGroup()
+                                    .addComponent(set_author_search)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(set_search_acc))
+                                .addComponent(set_isbn_search)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                        .addComponent(search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(main_jpanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(author_search_label)
-                        .addGap(4, 4, 4)
-                        .addComponent(author_search))
-                    .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(main_jpanelLayout.createSequentialGroup()
-                            .addComponent(set_author_search)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(set_search_acc))
-                        .addComponent(set_isbn_search)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
-                .addComponent(search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(books_scroll_panel)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(search_frame_heading)
+                                .addGap(109, 109, 109)
+                                .addComponent(add_book_btn)))))
                 .addContainerGap())
-            .addGroup(main_jpanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(books_scroll_panel)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(search_frame_heading)
-                .addGap(212, 212, 212))
         );
         main_jpanelLayout.setVerticalGroup(
             main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(search_frame_heading)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(main_jpanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(search_frame_heading)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(add_book_btn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
                         .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -158,6 +175,14 @@ public class BooksGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void add_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_book_btnActionPerformed
+        
+        (new AddBookGUI()).setVisible(true);
+
+        dispose();
+        
+    }//GEN-LAST:event_add_book_btnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,6 +294,7 @@ public class BooksGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add_book_btn;
     private javax.swing.JTextField author_search;
     private javax.swing.JLabel author_search_label;
     private javax.swing.JScrollPane books_scroll_panel;
