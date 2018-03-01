@@ -39,7 +39,9 @@ public class UpdateBookGUI extends javax.swing.JFrame {
      * Creates new form UpdateBook
      */
     public UpdateBookGUI() {
+      
         initComponents();
+        
     }
     
     public UpdateBookGUI(Book b, SetOfBooks sb)
@@ -150,7 +152,7 @@ public class UpdateBookGUI extends javax.swing.JFrame {
 
         jTextField1.setText("jTextField1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         book_edit_label.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         book_edit_label.setText(" BOOK VIEW");

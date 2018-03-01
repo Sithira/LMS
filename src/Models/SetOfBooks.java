@@ -182,4 +182,9 @@ public class SetOfBooks implements Serializable
         return this.books;
     }
     
+    public void setBooks(ArrayList<Book> list)
+    {
+        this.books = list;
+    }
+    
 }

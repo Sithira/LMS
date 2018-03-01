@@ -22,21 +22,33 @@ import javax.swing.table.DefaultTableModel;
 public class MembersGUI extends javax.swing.JFrame {
 
     private ObjectParser parser = ObjectParser.getInstance();
-               
+
+    DefaultTableModel tableModel = null;
+
+    String columnNames[] = {"Member ID", "Member Name", "Set of Books"};
+
     /**
      * Creates new form MembersGUI
      */
     public MembersGUI() {
+      
         initComponents();
         
+        tableModel = new DefaultTableModel(columnNames, 0);
+
         try {
-            loadDataToTable();
+
+            //clearTable();
+            Object som = parser.readObject(SetOfMembers.TABLE_PATH);
+
+            loadDataToTable(som);
+
         } catch (IOException ex) {
             Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     /**
@@ -53,13 +65,15 @@ public class MembersGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         member_table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lbl_member_name = new javax.swing.JLabel();
         member_id = new javax.swing.JTextField();
-        member_name_label = new javax.swing.JTextField();
+        member_name = new javax.swing.JTextField();
         search_button = new javax.swing.JButton();
         btn_add_member = new javax.swing.JButton();
+        btn_reload_table = new javax.swing.JButton();
+        member_img = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         label_member_frame.setFont(new java.awt.Font("Monaco", 0, 24)); // NOI18N
         label_member_frame.setText("LMS Members");
@@ -79,98 +93,175 @@ public class MembersGUI extends javax.swing.JFrame {
 
         jLabel1.setText("Member ID : ");
 
-        jLabel2.setText("Member Name : ");
+        lbl_member_name.setText("Member Name : ");
 
         search_button.setText("Search");
+        search_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search_buttonActionPerformed(evt);
+            }
+        });
 
-        btn_add_member.setText("Add");
+        btn_add_member.setText("Add a new member");
         btn_add_member.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_add_memberActionPerformed(evt);
             }
         });
 
+        btn_reload_table.setText("Reload Table");
+        btn_reload_table.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_reload_tableActionPerformed(evt);
+            }
+        });
+
+        member_img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/images/users.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(btn_add_member)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_reload_table))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(label_member_frame)
-                        .addGap(141, 141, 141)
-                        .addComponent(btn_add_member))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                            .addComponent(lbl_member_name)
                             .addComponent(jLabel1))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(member_name_label, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(member_id))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(search_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(member_id)
+                            .addComponent(member_name, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                        .addComponent(search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(225, 225, 225)
+                .addComponent(member_img)
+                .addGap(42, 42, 42)
+                .addComponent(label_member_frame)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(label_member_frame)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_add_member)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(40, 40, 40)
+                        .addComponent(label_member_frame))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(member_img)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(member_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(member_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(search_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lbl_member_name)
+                            .addComponent(member_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(search_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_reload_table)
+                    .addComponent(btn_add_member))
+                .addGap(33, 33, 33))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_add_memberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_memberActionPerformed
-        
+
         (new AddMemberGUI()).setVisible(true);
-        
+
         dispose();
-        
+
     }//GEN-LAST:event_btn_add_memberActionPerformed
+
+    private void search_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_buttonActionPerformed
+
+        clearTable();
+        
+        try {
+            SetOfMembers somp = (SetOfMembers) parser.readObject(SetOfMembers.TABLE_PATH);
+
+            SetOfMembers som = new SetOfMembers();
+            
+            if (!member_id.getText().isEmpty()) {
+
+                
+
+                Member member = somp.getMemberFromNumber(Integer.parseInt(member_id.getText()));
+                
+                som.addMember(member);
+                
+                loadDataToTable(som);
+
+            } else {
+
+                if (!member_name.getText().isEmpty()) {
+                   
+                    som = somp.getMembersFromName(member_name.getText());
+
+                    loadDataToTable(som);
+                    
+                }
+
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_search_buttonActionPerformed
+
+    private void btn_reload_tableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reload_tableActionPerformed
+
+        clearTable();
+
+        try {
+            
+            SetOfMembers som = (SetOfMembers) parser.readObject(SetOfMembers.TABLE_PATH);
+
+            loadDataToTable(som);
+        } catch (IOException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MembersGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btn_reload_tableActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,87 +297,76 @@ public class MembersGUI extends javax.swing.JFrame {
             }
         });
     }
-    
-        private void loadDataToTable() throws IOException,
+
+    private void loadDataToTable(Object param) throws IOException,
             FileNotFoundException,
-            ClassNotFoundException
-    {
-        
-        String columnNames[] = {"Member ID", "Member Name", "Set of Books"};
-        
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        
+            ClassNotFoundException {
+
         SetOfMembers som = new SetOfMembers();
-        
-        Object somo = parser.readObject(som.TABLE_PATH);
-        
+
+        Object somo = param;
+
         final SetOfMembers soped = (SetOfMembers) somo;
-        
+
         member_table.setModel(tableModel);
-    
+
         member_table.setCellSelectionEnabled(false);
-        
-        for (Member member : soped.getMembers())
-        {
-            
+
+        for (Member member : soped.getMembers()) {
+
             String member_name = "N/A";
-            
-            if (member.getName() != null)
-            {
+
+            if (member.getName() != null) {
                 member_name = member.getName();
             }
-            
+
             final SetOfBooks books;
-            
+
             StringBuilder booknames = new StringBuilder();
-            
-            if(member.getBooksOnLoan() != null)
-            {
+
+            if (member.getBooksOnLoan() != null) {
                 books = member.getBooksOnLoan();
-                
-                if (books.getBooks() != null && books.getBooks().size() > 0)
-                {
-                    
+
+                if (books.getBooks() != null && books.getBooks().size() > 0) {
+
                     int bookSize = books.getBooks().size();
-                    
-                    for(int x = 0; x < bookSize; x++)
-                    {
-                        
+
+                    for (int x = 0; x < bookSize; x++) {
+
                         booknames.append(books.getBooks().get(x).getTitle());
-                        
-                        if (x + 1 != bookSize)
-                        {
+
+                        if (x + 1 != bookSize) {
                             booknames.append(", ");
                         }
                     }
-                    
+
                 }
-                
+
             }
-            
+
             Object row[] = {
+                member.getMemberNumber(),
                 member_name,
-                member.getName(),
                 booknames.toString()
             };
-            
+
             tableModel.addRow(row);
         }
-        
-        member_table.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    int row = member_table.rowAtPoint(evt.getPoint());
-                    int col = member_table.columnAtPoint(evt.getPoint());
-                    if (row >= 0 && col >= 0) {
-                        
-                        String member_name = member_table
-                                .getValueAt(row, 0)
-                                .toString();
-                        
-                        Member member = soped.getMemberFromName(member_name);
 
-                        boolean opened = false;
+        member_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = member_table.rowAtPoint(evt.getPoint());
+                int col = member_table.columnAtPoint(evt.getPoint());
+                if (row >= 0 && col >= 0) {
+
+                    String member_name = member_table
+                            .getValueAt(row, 0)
+                            .toString();
+
+                    Member member = soped.getAMemberFromName(member_name);
+
+                    boolean opened = false;
 
 //                        for (Book book : setOfMembers.getBooks())
 //                        {                                       
@@ -294,27 +374,34 @@ public class MembersGUI extends javax.swing.JFrame {
 //
 //                            opened = true;
 //                        }
-
-                        if (opened)
-                        {
-                            dispose();
-                        }
-
+                    if (opened) {
+                        dispose();
                     }
+
                 }
-            });
-              
+            }
+        });
+
     }
+
+    private void clearTable() {
+
+        tableModel.getDataVector().removeAllElements();
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_member;
+    private javax.swing.JButton btn_reload_table;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel label_member_frame;
+    private javax.swing.JLabel lbl_member_name;
     private javax.swing.JTextField member_id;
-    private javax.swing.JTextField member_name_label;
+    private javax.swing.JLabel member_img;
+    private javax.swing.JTextField member_name;
     private javax.swing.JTable member_table;
     private javax.swing.JButton search_button;
     // End of variables declaration//GEN-END:variables

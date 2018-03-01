@@ -37,7 +37,7 @@ public class UpdateMemberGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         update_book_head = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         update_book_head.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         update_book_head.setText("Update Member");
@@ -76,6 +76,7 @@ public class UpdateMemberGUI extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

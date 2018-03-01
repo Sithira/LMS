@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class SetOfMembers implements Serializable
 {
 
-    public final String TABLE_PATH = Paths.get(".")
+    public static final String TABLE_PATH = Paths.get(".")
             .toAbsolutePath()
             .normalize()
             .toString() + "/database/SetOfMembers.srlz";
@@ -28,7 +28,31 @@ public class SetOfMembers implements Serializable
         members.add(member);
     }
     
-    public Member getMemberFromName(String name)
+    public SetOfMembers getMembersFromName(String name)
+    {
+
+        SetOfMembers som = new SetOfMembers();
+        
+        if (!members.isEmpty())
+        {
+            
+            for (Member member : members)
+            {
+                if (member instanceof Member)
+                {
+                    if (member.getName().equals(name))
+                    {
+                        som.addMember(member);
+                    }
+                }
+            }
+            
+        }
+        
+        return som;        
+    }
+    
+    public Member getAMemberFromName(String name)
     {
         
         if (!members.isEmpty())
@@ -49,8 +73,7 @@ public class SetOfMembers implements Serializable
             
         }
         
-        return null;
-        
+        return null;        
     }
     
     public Member getMemberFromNumber(int number)

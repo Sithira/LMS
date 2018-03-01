@@ -5,6 +5,7 @@
  */
 package GUI.Books;
 
+import Core.LMSAlert;
 import Core.ObjectParser;
 import Models.Book;
 import Models.SetOfBooks;
@@ -21,16 +22,24 @@ import javax.swing.table.DefaultTableModel;
 public class BooksGUI extends javax.swing.JFrame {
 
     private ObjectParser parser = ObjectParser.getInstance();
-    
+
+    String columnNames[] = {"ISBN", "Title", "Auther", "accessionNumber", "Member Name", "onLoan ?"};
+
+    DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+
     /**
      * Creates new form BooksGUI
      */
     public BooksGUI() {
-        
-        initComponents();
+    
+        initComponents();       
         
         try {
-            loadDataToTable();
+            
+            SetOfBooks sob = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
+            
+            loadDataToTable(sob);
+            
         } catch (IOException ex) {
             Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -48,19 +57,29 @@ public class BooksGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         search_group = new javax.swing.ButtonGroup();
+        btn_refresh = new javax.swing.JButton();
         main_jpanel = new javax.swing.JPanel();
         books_scroll_panel = new javax.swing.JScrollPane();
         books_table = new javax.swing.JTable();
         author_search_label = new javax.swing.JLabel();
-        author_search = new javax.swing.JTextField();
+        search = new javax.swing.JTextField();
         set_author_search = new javax.swing.JRadioButton();
         set_isbn_search = new javax.swing.JRadioButton();
         set_search_acc = new javax.swing.JRadioButton();
         search_button = new javax.swing.JButton();
         search_frame_heading = new javax.swing.JLabel();
+        all_books_icon = new javax.swing.JLabel();
+        set_title_search = new javax.swing.JRadioButton();
         add_book_btn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        btn_refresh.setText("Refresh Table");
+        btn_refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refreshActionPerformed(evt);
+            }
+        });
 
         books_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -77,23 +96,29 @@ public class BooksGUI extends javax.swing.JFrame {
 
         author_search_label.setText("Search");
 
+        search_group.add(set_author_search);
         set_author_search.setText("Search from Author Name");
 
+        search_group.add(set_isbn_search);
         set_isbn_search.setText("Search from ISBN");
 
+        search_group.add(set_search_acc);
         set_search_acc.setText("Search from ACC");
 
         search_button.setText("Search now");
-
-        search_frame_heading.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
-        search_frame_heading.setText("All Books in LMS");
-
-        add_book_btn.setText("Add Book");
-        add_book_btn.addActionListener(new java.awt.event.ActionListener() {
+        search_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                add_book_btnActionPerformed(evt);
+                search_buttonActionPerformed(evt);
             }
         });
+
+        search_frame_heading.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 24)); // NOI18N
+        search_frame_heading.setText("All Books in LMS");
+
+        all_books_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/images/books.png"))); // NOI18N
+
+        search_group.add(set_title_search);
+        set_title_search.setText("Search from Title");
 
         javax.swing.GroupLayout main_jpanelLayout = new javax.swing.GroupLayout(main_jpanel);
         main_jpanel.setLayout(main_jpanelLayout);
@@ -107,54 +132,64 @@ public class BooksGUI extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(author_search_label)
                                 .addGap(4, 4, 4)
-                                .addComponent(author_search))
-                            .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(main_jpanelLayout.createSequentialGroup()
+                                .addComponent(search))
+                            .addGroup(main_jpanelLayout.createSequentialGroup()
+                                .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(set_author_search)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(set_search_acc))
-                                .addComponent(set_isbn_search)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                                    .addComponent(set_isbn_search))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(set_title_search)
+                                    .addComponent(set_search_acc))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
                         .addComponent(search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(main_jpanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(books_scroll_panel)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(search_frame_heading)
-                                .addGap(109, 109, 109)
-                                .addComponent(add_book_btn)))))
+                        .addComponent(books_scroll_panel)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(all_books_icon)
+                .addGap(59, 59, 59)
+                .addComponent(search_frame_heading, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(122, 122, 122))
         );
         main_jpanelLayout.setVerticalGroup(
             main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
                 .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(main_jpanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(search_frame_heading)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(add_book_btn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGap(22, 22, 22)
+                        .addComponent(all_books_icon))
+                    .addGroup(main_jpanelLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(search_frame_heading)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, main_jpanelLayout.createSequentialGroup()
                         .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(author_search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(author_search_label))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(set_author_search)
                             .addComponent(set_search_acc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(set_isbn_search))
+                        .addGroup(main_jpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(set_isbn_search)
+                            .addComponent(set_title_search)))
                     .addComponent(search_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(books_scroll_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        add_book_btn.setText("Add Book");
+        add_book_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                add_book_btnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,7 +197,12 @@ public class BooksGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(main_jpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(main_jpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(add_book_btn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_refresh)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -170,19 +210,86 @@ public class BooksGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(main_jpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(add_book_btn)
+                    .addComponent(btn_refresh))
+                .addGap(25, 25, 25))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void add_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_book_btnActionPerformed
-        
+
         (new AddBookGUI()).setVisible(true);
 
         dispose();
-        
+
     }//GEN-LAST:event_add_book_btnActionPerformed
+
+    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
+        
+        clearTable();
+        
+        try {
+            
+            SetOfBooks sob = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
+            
+            loadDataToTable(sob);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btn_refreshActionPerformed
+
+    private void search_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_buttonActionPerformed
+
+        try {
+            
+            clearTable();
+
+            SetOfBooks sob = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
+
+            if (set_author_search.isSelected()) {
+
+                sob = sob.findBookByAuthor(search.getText());
+
+            } else if (set_isbn_search.isSelected()) {
+
+                sob = sob.findBookFromISBN(search.getText());
+
+            } else if (set_title_search.isSelected()) {
+                
+                sob = sob.findBookFromTitle(search.getText());
+                
+            } else if (set_search_acc.isSelected()) {
+                Book book = sob.findBookFromAccNumber(Integer.parseInt(search.getText()));
+
+                sob.setBooks(null);
+
+                sob.addBook(book);
+            } else {
+                
+                LMSAlert.showDialog("You should atleat select one category");
+
+                return;
+            }
+
+            loadDataToTable(sob);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BooksGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_search_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -218,36 +325,30 @@ public class BooksGUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void loadDataToTable() throws IOException,
+
+    private void loadDataToTable(Object object) throws IOException,
             FileNotFoundException,
             ClassNotFoundException
     {
-        
-        String columnNames[] = {"ISBN", "Title", "Auther", "accessionNumber", "Member Name", "onLoan ?"};
-        
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        
+
         SetOfBooks sop = new SetOfBooks();
-        
-        Object sopo = parser.readObject(sop.TABLE_PATH);
-        
-        final SetOfBooks soped = (SetOfBooks) sopo;
-        
+
+        Object sopo = parser.readObject(SetOfBooks.TABLE_PATH);
+
+        final SetOfBooks soped = (SetOfBooks) object;
+
         books_table.setModel(tableModel);
-    
+
         books_table.setCellSelectionEnabled(false);
-        
-        for (Book book : soped.getBooks())
-        {
-            
+
+        for (Book book : soped.getBooks()) {
+
             String member_name = "N/A";
-            
-            if (book.getBorrower() != null)
-            {
+
+            if (book.getBorrower() != null) {
                 member_name = book.getBorrower().getName();
             }
-            
+
             Object row[] = {
                 book.getISBNNumber(),
                 book.getTitle(),
@@ -256,55 +357,61 @@ public class BooksGUI extends javax.swing.JFrame {
                 member_name,
                 book.isOnLoan() ? "YES" : "NO"
             };
-            
+
             tableModel.addRow(row);
         }
-        
+
         books_table.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    int row = books_table.rowAtPoint(evt.getPoint());
-                    int col = books_table.columnAtPoint(evt.getPoint());
-                    if (row >= 0 && col >= 0) {
-                        
-                        String ISBN = books_table
-                                .getValueAt(row, 0)
-                                .toString();
-                        
-                        SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = books_table.rowAtPoint(evt.getPoint());
+                int col = books_table.columnAtPoint(evt.getPoint());
+                if (row >= 0 && col >= 0) {
 
-                        boolean opened = false;
+                    String ISBN = books_table
+                            .getValueAt(row, 0)
+                            .toString();
 
-                        for (Book book : setOfBooks.getBooks())
-                        {                                       
-                            (new UpdateBookGUI(book, soped)).setVisible(true);
+                    SetOfBooks setOfBooks = soped.findBookFromISBN(ISBN);
 
-                            opened = true;
-                        }
+                    boolean opened = false;
 
-                        if (opened)
-                        {
-                            dispose();
-                        }
+                    for (Book book : setOfBooks.getBooks()) {
+                        (new UpdateBookGUI(book, soped)).setVisible(true);
 
+                        opened = true;
                     }
+
+                    if (opened) {
+                        dispose();
+                    }
+
                 }
-            });
-              
+            }
+        });
+
+    }
+    
+    private void clearTable()
+    {
+        tableModel.getDataVector().removeAllElements();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add_book_btn;
-    private javax.swing.JTextField author_search;
+    private javax.swing.JLabel all_books_icon;
     private javax.swing.JLabel author_search_label;
     private javax.swing.JScrollPane books_scroll_panel;
     private javax.swing.JTable books_table;
+    private javax.swing.JButton btn_refresh;
     private javax.swing.JPanel main_jpanel;
+    private javax.swing.JTextField search;
     private javax.swing.JButton search_button;
     private javax.swing.JLabel search_frame_heading;
     private javax.swing.ButtonGroup search_group;
     private javax.swing.JRadioButton set_author_search;
     private javax.swing.JRadioButton set_isbn_search;
     private javax.swing.JRadioButton set_search_acc;
+    private javax.swing.JRadioButton set_title_search;
     // End of variables declaration//GEN-END:variables
 }

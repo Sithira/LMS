@@ -30,11 +30,11 @@ public class LMS {
         
         ObjectParser parser = ObjectParser.getInstance();
         
-        Member member1 = new Member(1, "Member 1");
+        Member member1 = new Member(1001, "Member 1");
         
-        Member member2 = new Member(1, "Member 2");
+        Member member2 = new Member(1002, "Member 1");
         
-        Member member3 = new Member(1, "Member 3");
+        Member member3 = new Member(1003, "Member 3");
         
         
         Book book1 = new Book("SomeISBN-1", "Title 1");
