@@ -106,13 +106,9 @@ public class Book implements Serializable
                 }
                 
             }
-            
-            System.out.println("Loans is null");
 
             return false;
         }
-        
-        System.out.println("Borrower is NULL");
         
         return false;
         

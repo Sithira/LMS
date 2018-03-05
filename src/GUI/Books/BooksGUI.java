@@ -11,6 +11,7 @@ import Models.Book;
 import Models.SetOfBooks;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -268,11 +269,45 @@ public class BooksGUI extends javax.swing.JFrame {
                 sob = sob.findBookFromTitle(search.getText());
                 
             } else if (set_search_acc.isSelected()) {
-                Book book = sob.findBookFromAccNumber(Integer.parseInt(search.getText()));
+                
+                try {
+                    
+                    Book book = sob.findBookFromAccNumber(Integer.parseInt(search.getText()));
+                
+                    if (book == null)
+                    {
+                        LMSAlert.showDialog("No Books found");
 
-                sob.setBooks(null);
+                        return;
+                    }
+                    else
+                    {                   
 
-                sob.addBook(book);
+                        for(Book bk : sob.getBooks())
+                        {
+
+                            if (bk.getAccessionNumber() != Integer.parseInt(search.getText()))
+                            {
+                                sob.removeBook(bk);
+                            }
+
+                        }
+
+                        sob.setBooks(null);
+
+                        ArrayList<Book> searchBookList = new ArrayList<Book>();
+                        
+                        searchBookList.add(book);
+                        
+                        sob.setBooks(searchBookList);
+  
+                    }
+
+                    } catch (Exception exception)
+                    {
+                        //exception.printStackTrace();
+                    }
+
             } else {
                 
                 LMSAlert.showDialog("You should atleat select one category");
@@ -331,9 +366,9 @@ public class BooksGUI extends javax.swing.JFrame {
             ClassNotFoundException
     {
 
-        SetOfBooks sop = new SetOfBooks();
-
-        Object sopo = parser.readObject(SetOfBooks.TABLE_PATH);
+//        SetOfBooks sop = new SetOfBooks();
+//
+//        Object sopo = parser.readObject(SetOfBooks.TABLE_PATH);
 
         final SetOfBooks soped = (SetOfBooks) object;
 
