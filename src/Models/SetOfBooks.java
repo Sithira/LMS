@@ -19,7 +19,7 @@ public class SetOfBooks implements Serializable
     public static final String TABLE_PATH = Paths.get(".")
             .toAbsolutePath()
             .normalize()
-            .toString() + "/database/SetOfBooks.srlz";
+            .toString() + "/database/SetOfBooks.txt";
     
     private ArrayList<Book> books = new ArrayList<Book>();
     

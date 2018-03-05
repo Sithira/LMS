@@ -19,7 +19,7 @@ public class SetOfMembers implements Serializable
     public static final String TABLE_PATH = Paths.get(".")
             .toAbsolutePath()
             .normalize()
-            .toString() + "/database/SetOfMembers.srlz";
+            .toString() + "/database/SetOfMembers.txt";
     
     private ArrayList<Member> members = new ArrayList<Member>();
 

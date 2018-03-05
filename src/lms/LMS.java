@@ -32,16 +32,16 @@ public class LMS {
         
         Member member1 = new Member(1001, "Member 1");
         
-        Member member2 = new Member(1002, "Member 1");
+        Member member2 = new Member(1002, "Member 2");
         
         Member member3 = new Member(1003, "Member 3");
         
         
-        Book book1 = new Book("SomeISBN-1", "Title 1");
+        Book book1 = new Book("SomeISBN-1", "Title 1", "Author 1", 1234);
         
-        Book book2 = new Book("SomeISBN-2", "Title 2");
+        Book book2 = new Book("SomeISBN-2", "Title 2", "Author 1", 12345);
         
-        Book book3 = new Book("SomeISBN-3", "Title 3");
+        Book book3 = new Book("SomeISBN-3", "Title 3", "Author 2", 123456);
         
         
         SetOfMembers som = new SetOfMembers();

@@ -96,7 +96,8 @@ public class Book implements Serializable
                     {                        
                         if (book instanceof Book)
                         {
-                            if (book.equals(this))
+                            if (book.getAccessionNumber() == this.accessionNumber 
+                                    && book.ISBNNumber.equals(this.ISBNNumber))
                             {
                                 return true;
                             }
@@ -105,11 +106,13 @@ public class Book implements Serializable
                 }
                 
             }
- 
-            System.out.println("Nikanma null wela");
             
+            System.out.println("Loans is null");
+
             return false;
         }
+        
+        System.out.println("Borrower is NULL");
         
         return false;
         

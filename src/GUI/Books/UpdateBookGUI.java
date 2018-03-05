@@ -24,104 +24,97 @@ import javax.swing.JFrame;
 public class UpdateBookGUI extends javax.swing.JFrame {
 
     private Book book = null;
-    
+
     private SetOfMembers som = new SetOfMembers();
-    
+
     private SetOfBooks sob = null;
-    
+
     private ObjectParser parser;
-    
+
     private static final String RM_MEMBER = "Remove Member";
-    
+
     private ArrayList<Member> member_arrays = new ArrayList<Member>();
-    
+
     /**
      * Creates new form UpdateBook
      */
     public UpdateBookGUI() {
-      
+
         initComponents();
-        
+
     }
-    
-    public UpdateBookGUI(Book b, SetOfBooks sb)
-    {
+
+    public UpdateBookGUI(Book b, SetOfBooks sb) {
+
         initComponents();
-        
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-       
+
         parser = ObjectParser.getInstance();
-        
-        for(Book bk : sb.getBooks())
-        {
-            if (bk.getISBNNumber().equals(b.getISBNNumber()))
-            {
+
+        for (Book bk : sb.getBooks()) {
+            if (bk.getISBNNumber().equals(b.getISBNNumber())) {
                 book = bk;
             }
         }
-        
-        sob = sb; 
-        
+
+        sob = sb;
+
         book_name.setText(book.getTitle());
-        
+
         book_isbn.setText(book.getISBNNumber());
-        
+
         String mem_name = "N/A";
-        
+
         String auth_name = "N/A";
-        
-        if (book.getAuthor() != null)
-        {
+
+        if (book.getAuthor() != null) {
             auth_name = book.getAuthor();
         }
-        
+
         book_author.setText(auth_name);
-        
-        if (book.getBorrower() != null)
-        {
+
+        if (book.getBorrower() != null) {
             mem_name = book.getBorrower().getName();
-        }           
-        
+        }
+
         try {
-            
-            som = (SetOfMembers) parser.readObject(som.TABLE_PATH);
-            
+
+            som = (SetOfMembers) parser.readObject(SetOfMembers.TABLE_PATH);
+
             member_names.addItem(RM_MEMBER);
-            
-            if (som.getMembers() != null && som.getMembers().size() > 0)
-            {        
-                
+
+            if (som.getMembers() != null && som.getMembers().size() > 0) {
+
                 Member memb = null;
-                                             
-                for (Member member : som.getMembers())
-                {
-                    
+
+                for (Member member : som.getMembers()) {
+
                     if (book.getBorrower() != null)
                     {
                         if (member.getName().equals(book.getBorrower().getName()))
                         {
-                              memb = member;
+                            memb = member;
                         }
-                    }                    
-                    
+                    }
+
                     member_arrays.add(member);
                     member_names.addItem(member.getName());
-                    
-                }  
-                
-                if (memb != null)
-                {
+
+                }
+
+                if (memb != null) {
                     member_names.setSelectedItem(memb.getName());
-                }               
-                
+                }
+
             }
-            
+
         } catch (IOException ex) {
             Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-             
+
     }
 
     /**
@@ -290,81 +283,97 @@ public class UpdateBookGUI extends javax.swing.JFrame {
 
     private void close_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_buttonActionPerformed
         (new BooksGUI()).setVisible(true);
-        
+
         this.dispose();
     }//GEN-LAST:event_close_buttonActionPerformed
 
     private void remove_bookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remove_bookActionPerformed
-        
-        if (book.isOnLoan())
-        {
+
+        if (book.isOnLoan()) {
             (new BooksGUI()).setVisible(true);
-            
+
             LMSAlert.showDialog("This book is on a loan. You Can't Delete it.");
-        }
-        else
-        {
+        } else {
             try {
-                
+
                 SetOfBooks sop = (SetOfBooks) parser.readObject(SetOfBooks.TABLE_PATH);
-                
+
                 sop.removeBook(book);
-                           
+
                 //LMSAlert.showDialog("Book has been removed from the LMS");
-                
-                parser.writeObject(sop.TABLE_PATH, sop);
-                
-                parser.writeObject(som.TABLE_PATH, som);
-                
+                parser.writeObject(SetOfBooks.TABLE_PATH, sop);
+
+                parser.writeObject(SetOfMembers.TABLE_PATH, som);
+
                 setVisible(false);
-                
+
                 dispose();
-                
+
                 (new BooksGUI()).setVisible(true);
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }//GEN-LAST:event_remove_bookActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        
+
         try {
             int i = member_names.getSelectedIndex();
-            
-            if (i == 0)
-            {
+
+            if (i == 0) {
                 book.setBorrower(null);
-            }
-            else
-            {
-                Member mem = member_arrays.get((i - 1));
+            } else {
                 
-                if (mem.getLoanCount() < 2)
+                Member mem = member_arrays.get((i - 1));
+
+                // get the member loan count/
+                if (mem.getLoanCount() < 3)
                 {
-                    book.setBorrower(mem);                    
-                                                   
-                    parser.writeObject(sob.TABLE_PATH, sob);
+                    
+                    // set the book borrower.
+                    book.setBorrower(mem);
+
+                    // get all the current loans that the member has.
+                    SetOfBooks curMemLoans = mem.getCurrentLoans();
+                    
+                    // might return null if the member does not has any loans
+                    if (curMemLoans == null)
+                    {
+                        // if so we will set a new instance
+                        curMemLoans = new SetOfBooks();                       
+                    }
+                    
+                    // and add to it.
+                    curMemLoans.addBook(book);
+                    
+                    // save it to the database.
+                    som.getMemberFromNumber(mem.getMemberNumber());
+                    
+                    // save the book information
+                    som.getMemberFromNumber(mem.getMemberNumber()).setCurrentLoans(sob);
+                    
+                    parser.writeObject(SetOfMembers.TABLE_PATH, som);
+                    
+                    parser.writeObject(SetOfBooks.TABLE_PATH, sob);                   
 
                     LMSAlert.showDialog("Book updates successfully");
-                }
-                else
-                {                    
+                } else {
                     LMSAlert.showDialog("This member has reached the maximum loan count");
                 }
-           
+
             }
-            
+
             (new BooksGUI()).setVisible(true);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(UpdateBookGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btn_updateActionPerformed
 
     /**
