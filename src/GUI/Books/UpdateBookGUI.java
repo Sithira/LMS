@@ -355,18 +355,18 @@ public class UpdateBookGUI extends javax.swing.JFrame {
                     som.getMemberFromNumber(mem.getMemberNumber());
                     
                     // save the book information
-                    som.getMemberFromNumber(mem.getMemberNumber()).setCurrentLoans(sob);
-                    
-                    parser.writeObject(SetOfMembers.TABLE_PATH, som);
-                    
-                    parser.writeObject(SetOfBooks.TABLE_PATH, sob);                   
+                    som.getMemberFromNumber(mem.getMemberNumber()).setCurrentLoans(sob);                                   
 
                     LMSAlert.showDialog("Book updates successfully");
                 } else {
                     LMSAlert.showDialog("This member has reached the maximum loan count");
-                }
+                }               
 
             }
+               
+            parser.writeObject(SetOfMembers.TABLE_PATH, som);
+                    
+            parser.writeObject(SetOfBooks.TABLE_PATH, sob);   
 
             (new BooksGUI()).setVisible(true);
 
