@@ -85,8 +85,9 @@ public class Member implements Serializable
                     
                     if (book instanceof Book)
                     {
-                        if (book.getBorrower() != null 
-                                && book.getBorrower().equals(this))
+                        if (book.getBorrower() != null && 
+                                book.getBorrower().getMemberNumber() ==
+                                this.memberNumber)
                         {                        
                             sob.addBook(book);                       
                         }
@@ -126,12 +127,12 @@ public class Member implements Serializable
             }
             else
             {
-                return -1;
+                return 0;
             }
         }
         else
         {
-            return -1;
+            return 0;
         }
         
     }

@@ -331,6 +331,8 @@ public class UpdateBookGUI extends javax.swing.JFrame {
                 
                 Member mem = member_arrays.get((i - 1));
 
+                System.out.println("Book count : " + mem.getLoanCount());
+                
                 // get the member loan count/
                 if (mem.getLoanCount() < 3)
                 {
